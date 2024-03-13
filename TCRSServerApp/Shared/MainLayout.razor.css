@@ -1,0 +1,9 @@
+.nav-colors {
+    background-color: var(--tdt-blue); 
+    color: var(--tdt-text);
+}
+
+.foot-colors {
+    background-color: #000;
+    color: #777;
+}
