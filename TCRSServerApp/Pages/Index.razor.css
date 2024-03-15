@@ -1,0 +1,128 @@
+﻿h1 {
+    font-size: 46px !important;
+    line-height: 64px !important;
+    margin: 0 0 32px 0 !important;
+    font-weight: 200 !important;
+    letter-spacing: -1px;
+}
+
+h6 {
+    font-size: 18px !important;
+    font-weight: 400 !important;
+    letter-spacing: normal;
+    line-height: 24px !important;
+    margin: 0 0 14px 0 !important;
+}
+
+hr {
+    margin: 22px auto !important;
+    width: 50px;
+    clear: both;
+    height: 1px;
+    opacity: 1;
+}
+
+p {
+    margin:0 0 20px !important;
+}
+
+.divider.divider-small.divider-small-sm hr {
+    height: 1px;
+}
+
+.divider.divider-small.divider-small-center hr {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.divider.divider-small.divider-small-center {
+    text-align: center;
+}
+
+.divider.divider-small {
+    margin: 22px auto;
+    background: transparent;
+}
+
+.divider {
+    height: 1px;
+    position: relative;
+    clear: both;
+}
+
+.intro-section {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    text-align: center;
+    color: #e6e6e6
+}
+
+.lead {
+    font-size: 1.25em;
+    font-weight: 300 !important;
+}
+
+.spacer-red {
+    padding: 2px;
+    background-color: #cc0000;
+    border: 1px solid #b30000;
+}
+
+.spacer-blue {
+    padding: 2px;
+    background-color: #0088cc;
+    border: 1px solid #0077b3;
+}
+
+.btn {
+    transform: perspective(1px) translateZ(0);
+    position: relative;
+    transition-property: color;
+    transition-duration: .3s;
+    transition: all .1s;
+    padding: 0 28px;
+    border: 0 solid transparent;
+    overflow: hidden;
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    font-size: 1em;
+    border-radius: .25em;
+}
+
+.btn-borders {
+    border-width: 0;
+}
+
+.mr-10 {
+    margin-right: 10px !important;
+}
+
+.mb-10 {
+    margin-bottom: 10px !important;
+}
+
+.mt-15 {
+    margin-top: 15px !important;
+}
+
+a {
+    margin: 0;
+    font: inherit;
+}
+
+.second-section {
+    background-color: #081d55 !important;
+    border-color: #06153e !important;
+}
+
+.p-20 {
+    padding: 20px !important;
+}
+
+.container-fluid {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}

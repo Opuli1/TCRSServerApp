@@ -1,18 +1,22 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
-using TCRSServerApp.Data;
-//using TCRSServerApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddTransient<UserService>()
+                .AddTransient<CategoryService>();
+builder.Services.AddScoped<AuthenticationService>();
+builder.Services.AddScoped<AppAuthenticationStateProvider>();
+builder.Services.AddScoped<AuthenticationStateProvider>(serviceProvider =>
+    serviceProvider.GetRequiredService<AppAuthenticationStateProvider>());
 
-var faqConnectionString = builder.Configuration.GetConnectionString("TCRS");
+var appConnectionString = builder.Configuration.GetConnectionString("TCRS");
+
 builder.Services.AddDbContext<TCRSContext>(options =>
-    options.UseSqlServer(faqConnectionString));
+    options.UseSqlServer(appConnectionString));
 
 var app = builder.Build();
 

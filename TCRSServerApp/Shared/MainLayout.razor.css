@@ -7,3 +7,19 @@
     background-color: #000;
     color: #777;
 }
+
+.spacer-red {
+    padding: 2px;
+    background-color: #cc0000;
+    border: 1px solid #b30000;
+}
+
+.col-md-12 {
+    flex: 0 0 100% !important;
+    text-align: center;
+}
+
+.container-fluid {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}

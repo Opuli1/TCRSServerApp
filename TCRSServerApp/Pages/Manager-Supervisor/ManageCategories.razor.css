@@ -1,0 +1,4 @@
+﻿dialog {
+    padding: 0;
+    border: 5px solid var(--tdt-red);
+}

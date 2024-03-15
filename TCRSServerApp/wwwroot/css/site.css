@@ -14,9 +14,15 @@ a, .btn-link {
 }
 
 .btn-primary {
-    color: #ffffff;
-    background-color: #081d55;
-    border-color: #081d55;
+    color: var(--tdt-text);
+    background-color: var(--tdt-blue);
+    border-color: var(--tdt-blue);
+}
+
+.spacer {
+    background-color: var(--tdt-red);
+    padding: 2px;
+    border: 1px solid var(--tdt-red-border);
 }
 
 .content {
@@ -66,5 +72,16 @@ a, .btn-link {
 
 :root {
     --tdt-blue: #081d55;
+    --tdt-red: #cc0000;
+    --tdt-red-border #b30000;
     --tdt-text: #fff;
+}
+
+.bg-blue {
+    background-color: var(--tdt-blue);
+}
+
+.bg-image {
+    background-image: url('../SiteImages/tn_retirement_header_bk_lake_blue.jpg');
+    background-size: 100%;
 }

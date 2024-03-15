@@ -1,29 +1,63 @@
-﻿
-<div class="container">
-    <header class="d-flex justify-content-center justify-content-md-between flex-wrap py-2">
-        <NavLink href="/" class="text-light nav-link"><img src="/tcrs_logo.png"</NavLink>
+﻿@inject AppAuthenticationStateProvider AppAuthStateProvider
+@inject NavigationManager NavigationManager
+
+<div>
+    <header class="d-flex justify-content-center flex-wrap py-2">
+        <NavLink href="/" class="text-light nav-link"><img src="/tcrs_logo.png" style="max-width: 75%" /></NavLink>
 
         <ul class="list-unstyled nav flex-row align-items-end">
+            <li class="bg-light separation mx-2"></li>
             <li>
-                <NavLink href="/" class="text-light nav-link">Home</NavLink>
+                <NavLink href="/" class="text-light nav-link btn">Home</NavLink>
             </li>
             <li>
-                <NavLink href="/faqs" class="text-light nav-link">FAQs</NavLink>
+                <NavLink href="/faqs" class="text-light nav-link btn">FAQs</NavLink>
             </li>
             <li>
-                <NavLink href="/about" class="text-light nav-link">About</NavLink>
+                <NavLink href="/about-us" class="text-light nav-link btn">About Us</NavLink>
             </li>
             <li>
-                <NavLink href="/manage-content" class="text-light nav-link">Manage Content</NavLink>
+                <NavLink href="/contact-us" class="text-light nav-link btn">Contact Us</NavLink>
             </li>
+            <li class="bg-light separation mx-2"></li>
+            <AuthorizeView>
+                <Authorized>
+                    <li>
+                        <NavLink href="/staff/view-content" class="text-light nav-link btn">View Content</NavLink>
+                    </li>
+                    <li class="bg-light separation mx-2"></li>
+                    <li>
+                        <NavLink href="/mngr-sprvsr/manage-categories" class="text-light nav-link btn">Manage Categories</NavLink>
+                    </li>
+                    <li>
+                        <NavLink href="/mngr-sprvsr/manage-content" class="text-light nav-link btn">Manage Content</NavLink>
+                    </li>
+                    <li class="bg-light separation mx-2"></li>
+                </Authorized>
+            </AuthorizeView>
         </ul>
 
         <div class="text-end nav flex-row align-items-end">
-            <NavLink href="/sign-in" class="btn btn-primary">Sign-in</NavLink>
+            <AuthorizeView>
+                <Authorizing>Checking Authentication...</Authorizing>
+
+                <Authorized>
+                    <NavLink href="javascript:void()" class="btn btn-light disabled mx-3">@context.User?.Identity?.Name</NavLink>
+                    <button type="button" class="btn btn-primary" @onclick="SignOutAsync">Sign-out</button>
+                </Authorized>
+
+                <NotAuthorized>
+                    <NavLink href="/sign-in" class="btn btn-primary">Sign-in</NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
         </div>
     </header>
 </div>
 
 @code {
-
+    private async Task SignOutAsync()
+    {
+        await AppAuthStateProvider.SignOutAsync();
+        NavigationManager.NavigateTo("/");
+    }
 }
