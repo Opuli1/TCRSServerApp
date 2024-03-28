@@ -7,9 +7,10 @@
     <div class="d-flex justify-content-between align-items-center">
         <h3>Manage Categories</h3>
 
-        <button class="btn btn-primary btn-sm">+ Add New Category</button>
+        <button class="btn btn-primary btn-sm" @onclick="OpenCategoryFormAsync">+ Add New Category</button>
     </div>
-    <hr />
+    
+    <div class="spacer-blue"></div>
 
     <table class="table">
         <thead>
@@ -46,6 +47,12 @@
                         <td>@category.Id</td>
                         <td>@category.Name</td>
                         <td>@category.Slug</td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn-sm text-decoration-underline" @onclick="()=> EditCategoryAsync(category)">Edit</button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm text-decoration-underline" @onclick="()=> DeleteCategoryAsync(category)">Delete</button>
+                        </td>
                     </tr>
 
                     sno++;
@@ -55,27 +62,61 @@
     </table>
 </div>
 
-<dialog open>
-    <SaveCategory OnSaveCategory="OnSaveCategory" />
+<dialog id="@_cateogryFormDialog">
+    <SaveCategory 
+        Category="_categoryModel" 
+        OnSaveCategory="OnSaveCategory" 
+        OnCloseForm="CloseCategoryFormAsync"/>
 </dialog>
 
 @code {
+    private const string _cateogryFormDialog = "category-form";
+
     private bool _loading = false;
 
     private IEnumerable<Category>? _categories = null;
 
+    private Category _categoryModel = new();
+
     protected override async Task OnInitializedAsync()
+    {
+        await LoadCategoriesAsync();
+    }
+
+    private async Task LoadCategoriesAsync()
     {
         _loading = true;
 
         try
         {
             _categories = await CategoryService.GetCategoriesAsync();
-        } finally
+        }
+        finally
         {
             _loading = false;
         }
+    }
 
+    private async Task OpenCategoryFormAsync() =>
+        await Js.InvokeVoidAsync("window.openModal", _cateogryFormDialog);
+
+    private async Task CloseCategoryFormAsync()
+    {
+        _categoryModel = new();
+
+        await Js.InvokeVoidAsync("window.closeModal", _cateogryFormDialog);
+    }
+
+    private async Task EditCategoryAsync(Category category)
+    {
+        _categoryModel = category.Clone();
+
+        await OpenCategoryFormAsync();
+    }
+
+    private async Task DeleteCategoryAsync(Category category)
+    {
+        
     }
 
     private async Task OnSaveCategory(MethodResult saveCategoryResult)
@@ -83,6 +124,10 @@
         if(saveCategoryResult.Status)
         {
             await AlertAsync("Category Saved Successfully!");
+
+            await LoadCategoriesAsync();
+
+            await CloseCategoryFormAsync();
         } else
         {
             await AlertAsync(saveCategoryResult.ErrorMessage!);

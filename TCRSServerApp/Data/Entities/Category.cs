@@ -13,5 +13,8 @@ namespace TCRSServerApp.Data.Entities
 
         [Required, MaxLength(100), Unicode(false)]
         public string Slug { get; set; }
+
+        public Category Clone() => 
+            (Category)this.MemberwiseClone();
     }
 }

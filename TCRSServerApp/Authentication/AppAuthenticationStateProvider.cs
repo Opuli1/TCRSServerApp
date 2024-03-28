@@ -44,7 +44,9 @@ namespace TCRSServerApp.Authentication
             }
 
             var authState = new AuthenticationState(claimsPrincipal);
+            
             NotifyAuthenticationStateChanged(Task.FromResult(authState));
+            
             return authState;
         }
 

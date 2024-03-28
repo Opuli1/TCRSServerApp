@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddTransient<UserService>()
-                .AddTransient<CategoryService>();
+                .AddTransient<CategoryService>()
+                .AddTransient<ContentPostService>();
 builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddScoped<AppAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(serviceProvider =>

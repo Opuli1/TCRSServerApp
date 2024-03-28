@@ -1,7 +1,97 @@
 ﻿@page "/mngr-sprvsr/manage-content"
 
-<h1>Manage Content</h1>
+@attribute [Authorize]
+
+@inject ContentPostService ContentPostService
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h3>Manage Content</h3>
+
+        <NavLink href="/mngr-sprvsr/manage-content/new" class="btn btn-primary btn-sm">+ Add New Content</NavLink>
+    </div>
+
+    <div class="spacer-blue"></div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Created/Edited</th>
+                <th>Published</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if(_isLoading)
+            {
+                <tr>
+                    <td colspan="7" class="text-center">Loading Content...</td>
+                </tr>
+            } else if(!_isLoading && (_posts is null || !_posts.Any())) {
+                <tr>
+                    <td colspan="7" class="text-center">
+                        <h3 class="mb-3">No Content Found</h3>
+                        <NavLink href="/mngr-sprvsr/manage-content/new" class="btn btn-primary btn-sm">+ Create First Post</NavLink>
+                    </td>
+                </tr>
+            } else
+            {
+                int snum = 1;
+                @foreach(var post in _posts!)
+                {
+                    var editContentLink = $"/mngr-sprvsr/manage-content/edit/{post.Id}";
+
+                    <tr>
+                        <td>@(snum++)</td>
+                        <td>@post.Id</td>
+                        <td>@post.Title</td>
+                        <td>@post.CategoryName</td>
+                        <td>
+                            @(post.EditedOn.HasValue 
+                                ? post.EditedOn.Value.ToShortDateString() 
+                                : post.CreatedOn.ToShortDateString())
+                        </td>
+                        <td>
+                            @if(post.IsPublished)
+                            {
+                                <span class="text-success">Yes</span>
+                            } else
+                            {
+                                <span class="text-danger">No</span>
+                            }
+                        </td>
+                        <td>
+                            <NavLink href="@editContentLink" class="btn btn-primary btn-sm">Edit</NavLink>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
 
 @code {
+    private bool _isLoading = false;
+    private IEnumerable<ContentPost>? _posts = null;
 
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+
+        try
+        {
+            _posts = await ContentPostService.GetPostsAsync();
+        }catch (Exception e)
+        {
+            //throw;
+        }finally
+        {
+            _isLoading = false;
+        }
+    }
 }

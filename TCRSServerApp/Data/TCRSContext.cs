@@ -7,14 +7,13 @@ namespace TCRSServerApp.Data
     {
         public TCRSContext(DbContextOptions<TCRSContext> options) : base(options)
         {
-
         }
 
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<User> Users { get; set; }
 
-        public DbSet<FAQPost> FAQPosts { get; set; }
+        public DbSet<ContentPost> ContentPosts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

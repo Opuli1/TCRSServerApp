@@ -1,0 +1,17 @@
+﻿
+@if(_visible)
+{
+    <div class="col-md-12 banner">
+        Important Sitewide Message Goes Here
+        <button @onclick="@Dismiss" class="btn btn-outline-danger">x</button>
+    </div>
+}
+
+@code {
+    private bool _visible = true;
+
+    private void Dismiss() 
+    {
+        _visible = false;
+    }
+}

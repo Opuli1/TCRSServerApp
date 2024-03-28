@@ -73,7 +73,7 @@ a, .btn-link {
 :root {
     --tdt-blue: #081d55;
     --tdt-red: #cc0000;
-    --tdt-red-border #b30000;
+    --tdt-red-border: #b30000;
     --tdt-text: #fff;
 }
 
@@ -180,4 +180,12 @@ p {
 
 .p-20 {
     padding: 20px !important;
+}
+
+.banner {
+    padding: 1em;
+    text-align: center;
+    background-color: #FFCCCC;
+    font-size: 1.2em;
+    position: absolute;
 }

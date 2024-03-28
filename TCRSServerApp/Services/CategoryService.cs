@@ -27,6 +27,8 @@ namespace TCRSServerApp.Services
                 }
                 else
                 {
+                    model.Slug = model.Slug.Slugify();
+
                     await _context.Categories.AddAsync(model);
                 }
 
