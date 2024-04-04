@@ -3,6 +3,10 @@
 @inject IJSRuntime Js
 @inject CategoryService CategoryService
 
+@attribute [Authorize]
+
+<PageTitle>Manage Categories | TCRS App</PageTitle>
+
 <div class="container">
     <div class="d-flex justify-content-between align-items-center">
         <h3>Manage Categories</h3>
@@ -23,14 +27,14 @@
         </thead>
 
         <tbody>
-            @if(_loading)
+            @if (_loading)
             {
                 <tr>
                     <td colspan="4">
                         Loading Categories...
                     </td>
                 </tr>
-            } else if(!_loading && _categories is null || !_categories.Any())
+            } else if (!_loading && (_categories is null || !_categories.Any()))
             {
                 <tr>
                     <td colspan="4">
@@ -39,30 +43,34 @@
                 </tr>
             } else
             {
-                int sno = 1;
+                int snum = 1;
                 foreach(var category in _categories)
                 {
                     <tr>
-                        <td>@sno</td>
+                        <td>@snum</td>
                         <td>@category.Id</td>
                         <td>@category.Name</td>
                         <td>@category.Slug</td>
-                        <td>
-                            <button type="button" class="btn btn-primary btn-sm text-decoration-underline" @onclick="()=> EditCategoryAsync(category)">Edit</button>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger btn-sm text-decoration-underline" @onclick="()=> DeleteCategoryAsync(category)">Delete</button>
-                        </td>
+                        @if(category.Id != 0)
+                        {
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm text-decoration-underline" @onclick="()=> EditCategoryAsync(category)">Edit</button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm text-decoration-underline" @onclick="()=> DeleteCategoryAsync(category)">Delete</button>
+                            </td>
+                        }
+                        
                     </tr>
 
-                    sno++;
+                    snum++;
                 }
             }
         </tbody>
     </table>
 </div>
 
-<dialog id="@_cateogryFormDialog">
+<dialog id="@_categoryFormDialog">
     <SaveCategory 
         Category="_categoryModel" 
         OnSaveCategory="OnSaveCategory" 
@@ -70,7 +78,7 @@
 </dialog>
 
 @code {
-    private const string _cateogryFormDialog = "category-form";
+    private const string _categoryFormDialog = "category-form";
 
     private bool _loading = false;
 
@@ -98,13 +106,13 @@
     }
 
     private async Task OpenCategoryFormAsync() =>
-        await Js.InvokeVoidAsync("window.openModal", _cateogryFormDialog);
+        await Js.InvokeVoidAsync("window.openModal", _categoryFormDialog);
 
     private async Task CloseCategoryFormAsync()
     {
         _categoryModel = new();
 
-        await Js.InvokeVoidAsync("window.closeModal", _cateogryFormDialog);
+        await Js.InvokeVoidAsync("window.closeModal", _categoryFormDialog);
     }
 
     private async Task EditCategoryAsync(Category category)
@@ -116,15 +124,15 @@
 
     private async Task DeleteCategoryAsync(Category category)
     {
-        
+        await CategoryService.DeleteCategoryAsync(category.Id);
+
+        await LoadCategoriesAsync();
     }
 
     private async Task OnSaveCategory(MethodResult saveCategoryResult)
     {
         if(saveCategoryResult.Status)
         {
-            await AlertAsync("Category Saved Successfully!");
-
             await LoadCategoriesAsync();
 
             await CloseCategoryFormAsync();

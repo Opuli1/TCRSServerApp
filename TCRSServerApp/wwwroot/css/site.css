@@ -72,16 +72,34 @@ a, .btn-link {
 
 :root {
     --tdt-blue: #081d55;
+    --tdt-light-blue: #0088cc;
     --tdt-red: #cc0000;
+    --tdt-gray: #575757;
     --tdt-red-border: #b30000;
     --tdt-text: #fff;
+}
+
+.tdt-blue {
+    background-color: #081d55;
+}
+
+.tdt-light-blue {
+    background-color: #0088cc;
+}
+
+.tdt-red {
+    background-color: #cc0000;
+}
+
+.tdt-gray {
+    background-color: #575757;
 }
 
 .bg-blue {
     background-color: var(--tdt-blue);
 }
 
-h1 {
+.h1-home {
     font-size: 46px !important;
     line-height: 64px !important;
     margin: 0 0 32px 0 !important;
@@ -121,7 +139,7 @@ h6 {
     border: 1px solid #0077b3;
 }
 
-hr {
+.small-hr {
     margin: 22px auto !important;
     width: 50px;
     clear: both;
@@ -178,6 +196,10 @@ p {
     margin-top: 15px !important;
 }
 
+.mt-16 {
+    margin-top: 16px !important;
+}
+
 .p-20 {
     padding: 20px !important;
 }
@@ -185,7 +207,7 @@ p {
 .banner {
     padding: 1em;
     text-align: center;
-    background-color: #FFCCCC;
+    background-color: #ffa391;
     font-size: 1.2em;
     position: absolute;
 }

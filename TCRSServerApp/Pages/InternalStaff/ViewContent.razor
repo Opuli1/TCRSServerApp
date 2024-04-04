@@ -1,5 +1,71 @@
 ﻿@page "/staff/view-content"
+@page "/categories/{categorySlug}/posts"
+
+@inject ContentPostService ContentPostService
+@inject CategoryService CategoryService
+
+@attribute [Authorize]
+
+<PageTitle>@heading | TCRS App</PageTitle>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+            <h1 class="fs-3 mt-16">@heading</h1>
+            <hr />
+
+            @if(!posts.Any())
+            {
+                <div class="d-flex justify-content-center flex-column align-items-center" style="min-height: 250px">
+                    <h3>No Content Found</h3>
+                    <AuthorizeView>
+                        <Authorized>
+                            <NavLink href="/mngr-sprvsr/manage-content/new" class="btn btn-primary">+ Create New Post</NavLink>
+                        </Authorized>
+
+                        <NotAuthorized>
+                            <p>Please check back later...</p>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </div>
+            } else
+            {
+                <ContentPostsList Posts="posts" />
+            }
+        </div>
+
+        <div class="col-sm-3">
+            <CategoriesBox CategorySlug="@CategorySlug" OnCategoryNameFound="SetHeading" />
+        </div>
+    </div>
+</div>
 
 @code {
+    [Parameter]
+    public string? CategorySlug { get; set; }
 
+    private string heading = "Recent Content";
+
+    private IEnumerable<ContentPost> posts = Enumerable.Empty<ContentPost>();
+
+    protected override async Task OnParametersSetAsync() =>
+        await SetDataAsync();
+
+    private async Task SetDataAsync()
+    {
+        var postsTask = ContentPostService.GetPostsAsync(publishedOnly: true, CategorySlug);
+
+        posts = await postsTask;
+    }
+
+    private void SetHeading(string? categoryName = null)
+    {
+        if(!string.IsNullOrWhiteSpace(CategorySlug) && !string.IsNullOrWhiteSpace(categoryName))
+        {
+            heading = $"Recent {categoryName} Content";
+        } else
+        {
+            heading = "Recent Content";
+        }
+    }
 }

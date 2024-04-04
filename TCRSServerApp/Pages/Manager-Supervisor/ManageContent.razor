@@ -4,6 +4,8 @@
 
 @inject ContentPostService ContentPostService
 
+<PageTitle>Manage Content | TCRS App</PageTitle>
+
 <div class="container">
     <div class="d-flex justify-content-between align-items-center">
         <h3>Manage Content</h3>
@@ -42,7 +44,7 @@
             } else
             {
                 int snum = 1;
-                @foreach(var post in _posts!)
+                @foreach(var post in _posts)
                 {
                     var editContentLink = $"/mngr-sprvsr/manage-content/edit/{post.Id}";
 
@@ -77,7 +79,7 @@
 
 @code {
     private bool _isLoading = false;
-    private IEnumerable<ContentPost>? _posts = null;
+    private IEnumerable<ContentPost> _posts = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -86,9 +88,6 @@
         try
         {
             _posts = await ContentPostService.GetPostsAsync();
-        }catch (Exception e)
-        {
-            //throw;
         }finally
         {
             _isLoading = false;

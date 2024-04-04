@@ -13,7 +13,7 @@ namespace TCRSServerApp.Services
 
         public async Task<IEnumerable<ContentPost>> GetPostsAsync(bool publishedOnly = false, string? categorySlug = null)
         {
-            var query = _context.ContentPosts
+           var query = _context.ContentPosts
                             .Include(cp => cp.Category)
                             .AsNoTracking();
 
@@ -25,7 +25,7 @@ namespace TCRSServerApp.Services
                                     .Select(c => c.Id)
                                     .FirstOrDefaultAsync();
 
-                if(categoryId > 0)
+                if(categoryId >= 0)
                 {
                     query = query.Where(cp => cp.CategoryId == categoryId);
                 }
@@ -38,7 +38,6 @@ namespace TCRSServerApp.Services
 
             return await query.ToListAsync();
         }
-            
 
         public async Task<ContentSaveModel?> GetPostAsync(int contentPostId) =>
             await _context.ContentPosts
@@ -74,7 +73,7 @@ namespace TCRSServerApp.Services
 
                     entity = post.Merge(entity);
 
-                    entity.PublishedOn = DateTime.Now;
+                    entity.EditedOn = DateTime.Now;
 
                     if(entity.IsPublished)
                     {
@@ -106,6 +105,28 @@ namespace TCRSServerApp.Services
             } catch (Exception e)
             {
                 return MethodResult.Failure(e.Message);
+            }
+        }
+
+        public async Task<MethodResult> DeleteCategoryFromPost(int categoryId)
+        {
+            try
+            {
+                var categoriesToDelete = await _context.ContentPosts
+                                            .Where(cp => cp.CategoryId == categoryId)
+                                            .ToListAsync();
+
+                foreach (var category in categoriesToDelete)
+                {
+                    category.CategoryId = 0;
+                }
+
+                await _context.SaveChangesAsync();
+
+                return MethodResult.Success();
+            } catch(Exception e)
+            {
+                return MethodResult.Failure("An error occurred while deleting category: " + e.Message);
             }
         }
 

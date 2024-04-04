@@ -1,4 +1,6 @@
-﻿@page "/mngr-sprvsr/manage-content/new"
+﻿@using Blazored.TextEditor
+
+@page "/mngr-sprvsr/manage-content/new"
 @page "/mngr-sprvsr/manage-content/edit/{urlPostId:int?}"
 
 @attribute [Authorize]
@@ -7,6 +9,8 @@
 @inject ContentPostService ContentPostService
 @inject AppAuthenticationStateProvider AppAuthStateProvider
 @inject NavigationManager NavigationManager
+
+<PageTitle>Save Content | TCRS App</PageTitle>
 
 <div class="container">
     <div class="d-flex justify-content-between align-items-center">
@@ -46,7 +50,6 @@
                     <div class="mb-3">
                         <label class="form-label">Category: </label>
                         <InputSelect @bind-Value="model.CategoryId" class="form-control">
-                            <option value="">Select Category</option>
 
                             @foreach (var category in categories)
                             {
@@ -104,7 +107,7 @@
                     }
                     <div class="mb-3 d-flex justify-content-between">
                         <button type="submit" class="btn btn-success">Save</button>
-                        <button type="reset" class="btn btn-danger">Cancel</button>
+                        <NavLink href="/mngr-sprvsr/manage-content" class="btn btn-danger">Cancel</NavLink>
                     </div>
                     <hr />
                 </EditForm>

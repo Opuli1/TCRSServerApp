@@ -17,7 +17,7 @@ builder.Services.AddScoped<AuthenticationStateProvider>(serviceProvider =>
 var appConnectionString = builder.Configuration.GetConnectionString("TCRS");
 
 builder.Services.AddDbContext<TCRSContext>(options =>
-    options.UseSqlServer(appConnectionString));
+    options.UseSqlServer(appConnectionString), ServiceLifetime.Transient);
 
 var app = builder.Build();
 

@@ -19,7 +19,7 @@ namespace TCRSServerApp.Data
         {
             base.OnConfiguring(optionsBuilder);
 #if DEBUG
-            optionsBuilder.LogTo(Console.WriteLine);
+            optionsBuilder.LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
 #endif
         }
 
@@ -39,6 +39,12 @@ namespace TCRSServerApp.Data
                         Hash = "iewfbukrficruyewreob"
                     }
                 );
+
+            modelBuilder.Entity<ContentPost>()
+                .HasOne(cp => cp.Category)
+                .WithMany(c => c.ContentPosts)
+                .HasForeignKey(cp => cp.CategoryId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

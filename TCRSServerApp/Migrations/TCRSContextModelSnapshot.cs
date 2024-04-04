@@ -47,7 +47,7 @@ namespace TCRSServerApp.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("TCRSServerApp.Data.Entities.FAQPost", b =>
+            modelBuilder.Entity("TCRSServerApp.Data.Entities.ContentPost", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,22 +59,16 @@ namespace TCRSServerApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Introduction")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                    b.Property<DateTime?>("EditedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsPublished")
                         .HasColumnType("bit");
-
-                    b.Property<DateTime?>("ModifiedOn")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("PublishedOn")
                         .HasColumnType("datetime2");
@@ -98,7 +92,7 @@ namespace TCRSServerApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FAQPosts");
+                    b.ToTable("ContentPosts");
                 });
 
             modelBuilder.Entity("TCRSServerApp.Data.Entities.User", b =>
@@ -152,12 +146,12 @@ namespace TCRSServerApp.Migrations
                         });
                 });
 
-            modelBuilder.Entity("TCRSServerApp.Data.Entities.FAQPost", b =>
+            modelBuilder.Entity("TCRSServerApp.Data.Entities.ContentPost", b =>
                 {
                     b.HasOne("TCRSServerApp.Data.Entities.Category", "Category")
-                        .WithMany()
+                        .WithMany("ContentPosts")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("TCRSServerApp.Data.Entities.User", "User")
@@ -169,6 +163,11 @@ namespace TCRSServerApp.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TCRSServerApp.Data.Entities.Category", b =>
+                {
+                    b.Navigation("ContentPosts");
                 });
 #pragma warning restore 612, 618
         }

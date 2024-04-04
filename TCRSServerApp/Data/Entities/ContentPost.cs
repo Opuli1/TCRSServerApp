@@ -14,11 +14,11 @@ namespace TCRSServerApp.Data.Entities
         [Required, MaxLength(150)]
         public string Slug { get; set; }
 
-        public int CategoryId { get; set; }
+        public int CategoryId { get; set; } = 0;
 
         public int UserId { get; set; }
 
-        public string? Content { get; set; }
+        public string Content { get; set; }
 
         public DateTime CreatedOn { get; set; }
 
@@ -28,6 +28,7 @@ namespace TCRSServerApp.Data.Entities
 
         public DateTime? EditedOn { get; set;}
 
+        [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }
 
         public virtual User User { get; set; }

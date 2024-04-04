@@ -1,0 +1,77 @@
+﻿@page "/posts/{slug}"
+
+@inject ContentPostService ContentPostService
+@inject CategoryService CategoryService
+
+<PageTitle>@post.Title | TCRS App</PageTitle>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+            @if(notFound)
+            {
+                <div class="d-flex justify-content-center flex-column align-items-center" style="min-height: 250px">
+                    <h3>Not Found</h3>
+
+                    <NavLink href="/staff/view-content" class="btn btn-primary">See the Latest Posts</NavLink>            
+                </div>
+            } else if(post?.Id > 0)
+            {
+                var categoryTitle = $"{post.CategoryName} Posts";
+
+                var categoryPostsLink = $"/categories/{post.Category.Slug}/posts";
+
+                var color = Utilities.GetRandomColor();
+
+                <h1 class="fs-1 bg-@color text-light p-5 mt-16 rounded">@post.Title</h1>
+                
+                <small>
+                    <label>
+                        <NavLink href="@categoryPostsLink" class="text-decoration-none" title="@categoryTitle">@post.CategoryName</NavLink>
+                    </label>
+
+                    <label>
+                        @post.PublishedOn!.Value.ToShortDateString();
+                    </label>
+                </small>
+                <hr />
+
+                <div class="main-content">
+                    @((MarkupString)post.Content)
+                </div>
+            } else
+            {
+                <p>Getting Post...</p>
+            }
+        </div>
+
+        <div class="col-sm-3">
+            <CategoriesBox />
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? Slug { get; set; }
+
+    private ContentPost post = new();
+
+    private bool notFound = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(!string.IsNullOrWhiteSpace(Slug))
+        {
+            var dbContent = await ContentPostService.GetPostBySlugAsync(Slug);
+
+            if(dbContent is null)
+            {
+                notFound = true;
+            } else
+            {
+                post = dbContent;
+            }
+        }
+    }
+}

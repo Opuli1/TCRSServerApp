@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using TCRSServerApp.Data.Entities;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
 
 namespace TCRSServerApp.Models
@@ -20,13 +21,13 @@ namespace TCRSServerApp.Models
         public bool IsPublished { get; set; }
 
         public ContentPost ToContentEntity(int userId) =>
-            new ContentPost()
+            new()
             {
                 Id = Id,
                 Title = Title,
                 Slug = Slug,
                 CategoryId = CategoryId,
-                Content = Content,
+                Content = Content!,
                 IsPublished = IsPublished,
                 UserId = userId
             };

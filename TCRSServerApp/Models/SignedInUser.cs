@@ -1,4 +1,6 @@
-﻿namespace TCRSServerApp.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TCRSServerApp.Models
 {
     public record struct SignedInUser(int UserId, string DisplayName)
     {
