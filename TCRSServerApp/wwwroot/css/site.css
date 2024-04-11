@@ -211,3 +211,22 @@ p {
     font-size: 1.2em;
     position: absolute;
 }
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu {
+    background-color: #cc0000;
+    text-align: center;
+    top: 100%;
+}
+
+.menu-overflow {
+    overflow: visible;
+}
+
+
+.dropdown-item:focus, .dropdown-item:hover {
+    background-color: #081d55 !important;
+}

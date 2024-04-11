@@ -1,4 +1,5 @@
 ﻿@using Blazored.TextEditor
+@using Microsoft.AspNetCore.Components.Forms
 
 @page "/mngr-sprvsr/manage-content/new"
 @page "/mngr-sprvsr/manage-content/edit/{urlPostId:int?}"
@@ -9,6 +10,7 @@
 @inject ContentPostService ContentPostService
 @inject AppAuthenticationStateProvider AppAuthStateProvider
 @inject NavigationManager NavigationManager
+@inject ContentPostService ContentPostService
 
 <PageTitle>Save Content | TCRS App</PageTitle>
 
@@ -94,6 +96,13 @@
                         </BlazoredTextEditor>
                         <ValidationMessage For="()=> model.Content" />
                     </div>
+
+                    <div class="mb-3">
+                        <label for="formFileMultiple" class="form-label">Select your files</label>
+                        <InputFile OnChange="@HandleFileUpload" class="form-control" type="file" id="formFileMultiple" multiple />
+                    </div>
+                    
+                    
                     <div class="mb-3">
                         <div class="form-check form-switch">
                             <InputCheckbox id="post-publish-check" @bind-Value="model.IsPublished" class="form-check-input" role="switch" />
@@ -112,6 +121,8 @@
                     <hr />
                 </EditForm>
             }
+            
+            <div class="mb-3"></div>
         </div>
     </div>
 </div>
@@ -121,6 +132,8 @@
     public int? UrlPostId { get; set; }
 
     private int PostId => UrlPostId ?? 0;
+
+    private ContentPost post = new ContentPost();
 
     private bool _isLoading = false;
 
@@ -189,6 +202,22 @@
             _isLoading = false;
 
             errorMessage = e.Message;
+        }
+    }
+
+    private async Task HandleFileUpload(InputFileChangeEventArgs e)
+    {
+        foreach(var file in e.GetMultipleFiles())
+        {
+            var fileName = $"{Guid.NewGuid()}-{file.Name}";
+
+            var filePath = Path.Combine("wwwroot/uploads", fileName);
+
+            using var stream = new FileStream(filePath, FileMode.Create);
+
+            await file.OpenReadStream().CopyToAsync(stream);
+
+            post.Files.Add(new FileMetaData { FileName = file.Name, FilePath = filePath });
         }
     }
 }

@@ -1,0 +1,73 @@
+﻿@inject SearchService SearchService
+
+<div class="search-box">
+    <input type="text" class="form-control" @bind="searchText" placeholder="Search..." @oninput="HandleInput" />
+</div>
+
+@if (!string.IsNullOrWhiteSpace(searchText))
+{
+    <div class="search-results-dropdown">
+        @if(searchResults.Any())
+        {
+            @foreach(var result in searchResults)
+            {
+                <a href="/posts/@result.Url" class="search-result-item">
+                    @if(result.Type == "Post")
+                    {
+                        @result.Title
+
+                        @result.Description
+                    } else if(result.Type == "Category")
+                    {
+                        <p>Category: @result.Title</p>
+                    }
+                </a>
+            }
+        } else if(searchPerformed)
+        {
+            <div class="no-results">No Results Found</div>
+        }
+    </div>
+}
+
+@code {
+    private string searchText = string.Empty;
+    private List<SearchResult> searchResults = new List<SearchResult>();
+    private System.Threading.Timer debounceTimer;
+    private bool searchPerformed = false;
+
+    private async Task HandleInput(ChangeEventArgs e)
+    {
+        searchText = e.Value?.ToString() ?? string.Empty;
+
+        debounceTimer?.Change(300, Timeout.Infinite);
+    }
+
+    protected override async void OnInitialized()
+    {
+        debounceTimer = new System.Threading.Timer(async _ =>
+        {
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                var results = await SearchService.SearchAsync(searchText);
+
+                searchResults = results;
+
+                searchPerformed = true;
+            }
+            else
+            {
+                searchResults.Clear();
+
+                searchPerformed = searchText != string.Empty;
+            }
+
+            InvokeAsync(StateHasChanged);
+        }, null, Timeout.Infinite, Timeout.Infinite);
+    }
+
+    public void Dispose()
+    {
+        debounceTimer?.Dispose();
+    }
+}

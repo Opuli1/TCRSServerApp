@@ -3,6 +3,7 @@
 
 @inject ContentPostService ContentPostService
 @inject CategoryService CategoryService
+@inject NavigationManager NavigationManager
 
 @attribute [Authorize]
 
@@ -44,7 +45,7 @@
     [Parameter]
     public string? CategorySlug { get; set; }
 
-    private string heading = "Recent Content";
+    private string heading = "All Recent Content";
 
     private IEnumerable<ContentPost> posts = Enumerable.Empty<ContentPost>();
 
@@ -53,9 +54,12 @@
 
     private async Task SetDataAsync()
     {
-        var postsTask = ContentPostService.GetPostsAsync(publishedOnly: true, CategorySlug);
+        posts = await ContentPostService.GetPostsAsync(publishedOnly: true, CategorySlug);
 
-        posts = await postsTask;
+        if (NavigationManager.Uri.EndsWith("/staff/view-content"))
+        {
+            heading = "All Recent Content";
+        }
     }
 
     private void SetHeading(string? categoryName = null)
@@ -63,9 +67,6 @@
         if(!string.IsNullOrWhiteSpace(CategorySlug) && !string.IsNullOrWhiteSpace(categoryName))
         {
             heading = $"Recent {categoryName} Content";
-        } else
-        {
-            heading = "Recent Content";
         }
     }
 }

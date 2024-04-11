@@ -35,5 +35,7 @@ namespace TCRSServerApp.Data.Entities
 
         [NotMapped]
         public string CategoryName => Category.Name;
+
+        public List<FileMetaData> Files { get; set; } = new List<FileMetaData>();
     }
 }

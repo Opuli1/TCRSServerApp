@@ -13,6 +13,7 @@ builder.Services.AddScoped<AuthenticationService>();
 builder.Services.AddScoped<AppAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(serviceProvider =>
     serviceProvider.GetRequiredService<AppAuthenticationStateProvider>());
+builder.Services.AddScoped<SearchService>();
 
 var appConnectionString = builder.Configuration.GetConnectionString("TCRS");
 
@@ -30,9 +31,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
-
 app.UseRouting();
 
 app.MapBlazorHub();

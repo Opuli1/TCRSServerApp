@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TCRSServerApp.Data.Entities;
 
 namespace TCRSServerApp.Data
 {
@@ -9,7 +8,7 @@ namespace TCRSServerApp.Data
         {
         }
 
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<Entities.Category> Categories { get; set; }
 
         public DbSet<User> Users { get; set; }
 
