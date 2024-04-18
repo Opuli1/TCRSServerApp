@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore;
 
 namespace TCRSServerApp.Services
 {
@@ -22,7 +23,7 @@ namespace TCRSServerApp.Services
                 var categoryId = await _context.Categories
                                     .AsNoTracking()
                                     .Where(c => c.Slug == categorySlug)
-                                    .Select(c => c.Id)
+                                    .Select(c => c.CategoryId)
                                     .FirstOrDefaultAsync();
 
                 if(categoryId >= 0)
@@ -44,17 +45,24 @@ namespace TCRSServerApp.Services
                         .Include(cp => cp.Category)
                         .AsNoTracking()
                         .Select(ContentSaveModel.Selector)
-                        .FirstOrDefaultAsync(cp => cp.Id == contentPostId);
+                        .FirstOrDefaultAsync(cp => cp.PostId == contentPostId);
 
         public async Task<MethodResult> SaveAsync(ContentSaveModel post, int userId)
         {
-            if(post.Id == 0)
+            if(post.PostId == 0)
             {
                 var entity = post.ToContentEntity(userId);
+
+                var categoryExists = await _context.Categories.AnyAsync(c => c.CategoryId == post.CategoryId);
 
                 entity.Slug = entity.Slug.Slugify();
                 
                 entity.CreatedOn = DateTime.Now;
+
+                if(!categoryExists)
+                {
+                    return MethodResult.Failure("Invalid Category ID");
+                }
 
                 if(entity.IsPublished)
                 {
@@ -65,7 +73,7 @@ namespace TCRSServerApp.Services
             } else
             {
                 ContentPost? entity = await _context.ContentPosts
-                                        .FirstOrDefaultAsync (cp => cp.Id == post.Id);
+                                        .FirstOrDefaultAsync (cp => cp.PostId == post.PostId);
 
                 if(entity is not null)
                 {
@@ -108,6 +116,30 @@ namespace TCRSServerApp.Services
             }
         }
 
+        public async Task<MethodResult> DeletePostsAsync(int contentId)
+        {
+            try
+            {
+
+                var content = await _context.ContentPosts.FindAsync(contentId);
+
+                if (content == null)
+                {
+                    return MethodResult.Failure("Post not found");
+                }
+
+                _context.ContentPosts.Remove(content);
+
+                await _context.SaveChangesAsync();
+
+                return MethodResult.Success();
+            }
+            catch (Exception ex)
+            {
+                return MethodResult.Failure(ex.Message);
+            }
+        }
+
         public async Task<MethodResult> DeleteCategoryFromPost(int categoryId)
         {
             try
@@ -118,7 +150,7 @@ namespace TCRSServerApp.Services
 
                 foreach (var category in categoriesToDelete)
                 {
-                    category.CategoryId = 0;
+                    category.CategoryId = 1;
                 }
 
                 await _context.SaveChangesAsync();

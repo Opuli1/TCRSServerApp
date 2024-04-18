@@ -45,7 +45,7 @@
     [Parameter]
     public string? CategorySlug { get; set; }
 
-    private string heading = "All Recent Content";
+    private string heading = "All Recent Posts";
 
     private IEnumerable<ContentPost> posts = Enumerable.Empty<ContentPost>();
 
@@ -54,11 +54,13 @@
 
     private async Task SetDataAsync()
     {
-        posts = await ContentPostService.GetPostsAsync(publishedOnly: true, CategorySlug);
+        var allPosts = await ContentPostService.GetPostsAsync(publishedOnly: true, CategorySlug);
+
+        posts = allPosts.Where(p => p.CategoryId == 1 || p.CategoryId >= 4).ToList();
 
         if (NavigationManager.Uri.EndsWith("/staff/view-content"))
         {
-            heading = "All Recent Content";
+            heading = "All Recent Posts";
         }
     }
 
@@ -66,7 +68,7 @@
     {
         if(!string.IsNullOrWhiteSpace(CategorySlug) && !string.IsNullOrWhiteSpace(categoryName))
         {
-            heading = $"Recent {categoryName} Content";
+            heading = $"Recent {categoryName} Posts";
         }
     }
 }

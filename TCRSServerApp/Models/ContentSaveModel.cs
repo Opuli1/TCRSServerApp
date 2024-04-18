@@ -6,7 +6,7 @@ namespace TCRSServerApp.Models
 {
     public class ContentSaveModel
     {
-        public int Id { get; set; }
+        public int PostId { get; set; }
 
         [Required, MaxLength(120)]
         public string Title { get; set; }
@@ -23,7 +23,7 @@ namespace TCRSServerApp.Models
         public ContentPost ToContentEntity(int userId) =>
             new()
             {
-                Id = Id,
+                PostId = PostId,
                 Title = Title,
                 Slug = Slug,
                 CategoryId = CategoryId,
@@ -44,7 +44,7 @@ namespace TCRSServerApp.Models
         public static Expression<Func<ContentPost, ContentSaveModel>> Selector =>
             cp => new ContentSaveModel
             {
-                Id = cp.Id,
+                PostId = cp.PostId,
                 Title = cp.Title,
                 Slug = cp.Slug,
                 CategoryId = cp.CategoryId,

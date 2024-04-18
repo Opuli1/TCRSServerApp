@@ -1,18 +1,27 @@
 ﻿@inherits LayoutComponentBase
 
+@using TCRSServerApp.Data
+
+@inject BannerService BannerService
+
 <div class="page d-flex flex-column">
     <div class="container-fluid nav-colors">
         <NavBar />
+        <div class="float-end mb-3 mx-2">
+            <SearchComponent />
+        </div>
+        
     </div>
+
+    <BannerMessage />
 
     <div class="spacer-red"></div>
 
     <div class="container-fluid flex-grow-1">
-        <BannerMessage />
         @Body
     </div>
 
-    <div class="spacer-red"></div>
+    <div class="footer-spacer-red"></div>
 
     <footer class="fixed-bottom text-center d-flex align-items-center justify-content-center foot-colors">
         <p class="mb-0 py-2">&copy; Copyright 2024 · Tennessee Department of Treasury</p>

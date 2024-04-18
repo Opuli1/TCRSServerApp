@@ -12,7 +12,7 @@ using TCRSServerApp.Data;
 namespace TCRSServerApp.Migrations
 {
     [DbContext(typeof(TCRSContext))]
-    [Migration("20240403235735_InitialMigration")]
+    [Migration("20240417231207_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -25,13 +25,41 @@ namespace TCRSServerApp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("TCRSServerApp.Data.Entities.Category", b =>
+            modelBuilder.Entity("TCRSServerApp.Data.BannerSettings", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("BannerId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("BannerId"));
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Visible")
+                        .HasColumnType("bit");
+
+                    b.HasKey("BannerId");
+
+                    b.ToTable("BannerSettings");
+
+                    b.HasData(
+                        new
+                        {
+                            BannerId = 1,
+                            Message = "*Important Message Goes Here*",
+                            Visible = false
+                        });
+                });
+
+            modelBuilder.Entity("TCRSServerApp.Data.Entities.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -45,23 +73,44 @@ namespace TCRSServerApp.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            Name = "Uncategorized",
+                            Slug = "uncategorized"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            Name = "FAQ",
+                            Slug = "faq"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            Name = "Documentation",
+                            Slug = "documentation"
+                        });
                 });
 
             modelBuilder.Entity("TCRSServerApp.Data.Entities.ContentPost", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("PostId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PostId"));
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
@@ -89,7 +138,7 @@ namespace TCRSServerApp.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("PostId");
 
                     b.HasIndex("CategoryId");
 
@@ -98,13 +147,45 @@ namespace TCRSServerApp.Migrations
                     b.ToTable("ContentPosts");
                 });
 
-            modelBuilder.Entity("TCRSServerApp.Data.Entities.User", b =>
+            modelBuilder.Entity("TCRSServerApp.Data.Entities.FileMetaData", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("FileId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FileId"));
+
+                    b.Property<int?>("ContentPostPostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("FileId");
+
+                    b.HasIndex("ContentPostPostId");
+
+                    b.ToTable("FileMetaData");
+                });
+
+            modelBuilder.Entity("TCRSServerApp.Data.Entities.User", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("EditedOn")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -133,14 +214,15 @@ namespace TCRSServerApp.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("Users");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            UserId = 1,
+                            CreatedOn = new DateTime(2024, 4, 17, 18, 12, 7, 93, DateTimeKind.Local).AddTicks(6788),
                             Email = "john.doe@gmail.com",
                             FirstName = "John",
                             Hash = "iewfbukrficruyewreob",
@@ -168,9 +250,21 @@ namespace TCRSServerApp.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TCRSServerApp.Data.Entities.FileMetaData", b =>
+                {
+                    b.HasOne("TCRSServerApp.Data.Entities.ContentPost", null)
+                        .WithMany("Files")
+                        .HasForeignKey("ContentPostPostId");
+                });
+
             modelBuilder.Entity("TCRSServerApp.Data.Entities.Category", b =>
                 {
                     b.Navigation("ContentPosts");
+                });
+
+            modelBuilder.Entity("TCRSServerApp.Data.Entities.ContentPost", b =>
+                {
+                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }

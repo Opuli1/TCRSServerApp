@@ -1,11 +1,14 @@
 ﻿.search-box {
-    position: relative;
     width: 100%;
     max-width: 400px;
+    position: relative;
+    margin-bottom: 0;
 }
 
 .search-results-dropdown {
     position: absolute;
+    top: 100%;
+    left: 0;
     width: 100%;
     max-height: 300px;
     overflow-y: auto;
@@ -27,6 +30,7 @@
 }
 
 .no-results {
+    display: block;
     padding: 10px;
     color: #666;
     font-style: italic;

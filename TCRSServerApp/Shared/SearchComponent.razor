@@ -1,8 +1,8 @@
 ﻿@inject SearchService SearchService
 
-<div class="search-box">
+<div class="search-box d-flex float-end mx-5">
     <input type="text" class="form-control" @bind="searchText" placeholder="Search..." @oninput="HandleInput" />
-</div>
+
 
 @if (!string.IsNullOrWhiteSpace(searchText))
 {
@@ -11,7 +11,7 @@
         {
             @foreach(var result in searchResults)
             {
-                <a href="/posts/@result.Url" class="search-result-item">
+                <a href="@result.Url" class="search-result-item">
                     @if(result.Type == "Post")
                     {
                         @result.Title
@@ -29,7 +29,7 @@
         }
     </div>
 }
-
+</div>
 @code {
     private string searchText = string.Empty;
     private List<SearchResult> searchResults = new List<SearchResult>();
@@ -40,7 +40,7 @@
     {
         searchText = e.Value?.ToString() ?? string.Empty;
 
-        debounceTimer?.Change(300, Timeout.Infinite);
+        debounceTimer?.Change(500, Timeout.Infinite);
     }
 
     protected override async void OnInitialized()

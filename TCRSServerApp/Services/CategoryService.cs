@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Text.RegularExpressions;
 
 namespace TCRSServerApp.Services
 {
@@ -23,7 +22,7 @@ namespace TCRSServerApp.Services
         {
             try
             {
-                if (model.Id >= 0)
+                if (model.CategoryId > 0)
                 {
                     _context.Categories.Update(model);
                 }

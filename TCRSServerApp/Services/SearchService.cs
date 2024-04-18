@@ -18,7 +18,7 @@ namespace TCRSServerApp.Services
                         .Where(post => EF.Functions.Like(post.Title, $"%{searchText}%") || EF.Functions.Like(post.Content, $"%{searchText}%"))
                         .Select(post => new SearchResult
                         {
-                            Id = post.Id,
+                            SearchId = post.PostId,
                             Title = post.Title,
                             Description = new MarkupString(post.Content.Length > 100 ? $"{post.Content.Substring(0, 100)}..." : $"{post.Content}"),
                             Url = $"/posts/{post.Slug}",
@@ -27,10 +27,10 @@ namespace TCRSServerApp.Services
                         .ToListAsync();
 
             var categoryResults = _context.Categories
-                            .Where(category => EF.Functions.Like(category.Name, $"%{searchText}%"))
+                            .Where(category => (category.CategoryId == 1 || category.CategoryId >= 4) && EF.Functions.Like(category.Name, $"%{searchText}%"))
                             .Select(category => new SearchResult
                             {
-                                Id = category.Id,
+                                SearchId = category.CategoryId,
                                 Title = category.Name,
                                 Url = $"/categories/{category.Slug}/posts",
                                 Type = "Category"

@@ -1,0 +1,152 @@
+﻿@page "/admin/manage-users/new"
+@page "/admin/manage-users/edit/{UserId:int?}"
+
+@using Microsoft.EntityFrameworkCore
+@using TCRSServerApp.Data
+@using System.Security.Cryptography
+@using Microsoft.AspNetCore.Cryptography.KeyDerivation
+
+@inject TCRSContext _context
+@inject NavigationManager NavigationManager
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h3>Save User</h3>
+
+        <NavLink href="/admin/manage-users" class="btn btn-primary btn-sm">Back to Manage Users</NavLink>
+    </div>
+
+    <div class="spacer-blue"></div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="mb-3">
+                    <label class="form-label" for="email">Email: </label>
+                    <InputText id="email" class="form-control" @bind-Value="model.Email" />
+                    @if(duplicate)
+                    {
+                        <div class="text-danger">
+                            Email already exists...
+                        </div>
+                    }
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="firstName">First Name: </label>
+                    <InputText id="firstName" class="form-control" @bind-Value="model.FirstName" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="lastName">Last Name: </label>
+                    <InputText id="lastName" class="form-control" @bind-Value="model.LastName" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label" for="password">@PasswordLabel</label>
+                    <InputText id="password" class="form-control" @bind-Value="model.Password" />
+                </div>
+
+                <div class="mb-3 d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <NavLink href="/admin/manage-users" class="btn btn-danger">Cancel</NavLink>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int? UserId { get; set; }
+
+    private UserModel model = new UserModel();
+
+    private bool duplicate = false;
+
+    private string ButtonText => UserId.HasValue ? "Update User" : "Create User";
+
+    private string PasswordLabel => UserId.HasValue ? "Reset Password: " : "Password: ";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(UserId.HasValue)
+        {
+            var user = await _context.Users.FindAsync(UserId.Value);
+
+            if(user != null)
+            {
+                model = new UserModel
+                {
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName
+                };
+            }
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (UserId.HasValue)
+        {
+            var userToUpdate = await _context.Users.FindAsync(UserId.Value);
+
+            if(userToUpdate != null)
+            {
+                userToUpdate.FirstName = model.FirstName;
+                userToUpdate.LastName = model.LastName;
+                userToUpdate.Email = model.Email;
+                userToUpdate.EditedOn = DateTime.Now;
+
+                await _context.SaveChangesAsync();
+            }
+        } else
+        {
+            duplicate = await _context.Users.AnyAsync(u => u.Email == model.Email);
+
+            if(!duplicate)
+            {
+                CreatePasswordHash(model.Password, out byte[] salt, out byte[] hash);
+
+                User newUser = new User
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email,
+                    Salt = Convert.ToBase64String(salt),
+                    Hash = Convert.ToBase64String(hash)
+                };
+
+                _context.Users.Add(newUser);
+
+                await _context.SaveChangesAsync();
+            } else
+            {
+                return;
+            }
+            NavigationManager.NavigateTo("/admin/manage-users", forceLoad: true);
+        }
+    }
+
+    private void CreatePasswordHash(string password, out byte[] salt, out byte[] hash)
+    {
+        salt = new byte[128 / 8];
+
+        using (var rng = RandomNumberGenerator.Create())
+        {
+            rng.GetBytes(salt);
+        }
+
+        hash = KeyDerivation.Pbkdf2(
+            password: password,
+            salt: salt,
+            prf: KeyDerivationPrf.HMACSHA256,
+            iterationCount: 10000,
+            numBytesRequested: 256 / 8
+    );
+    }
+}

@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
+using System.ComponentModel.DataAnnotations;
 
 namespace TCRSServerApp.Services
 {
     public class SearchResult
     {
-        public int Id { get; set; }
+        [Key]
+        public int SearchId { get; set; }
 
         public string Title { get; set; }
 

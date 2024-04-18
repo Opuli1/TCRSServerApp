@@ -1,0 +1,55 @@
+﻿@page "/admin/manage-banner"
+
+@using TCRSServerApp.Components
+
+@inject NavigationManager NavigationManager
+@inject BannerService BannerService
+
+@attribute [Authorize]
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h3>Manage Banner</h3>
+    </div>
+
+    <div class="spacer-blue"></div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="mb-3">
+                    <label class="form-label">Banner Message: </label>
+                    <InputText id="message" class="form-control" @bind-Value="model.Message" />
+                </div>
+                <div class="mb-3">
+                    <div class="form-check form-switch">
+                        <label class="form-check-label" for="visibility">Banner Visibility: </label>
+                        <InputCheckbox id="visibility" @bind-Value="model.Visible" class="form-check-input" role="switch" />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success mb-3">Update Banner</button>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private BannerModel model = new BannerModel();
+
+    protected override void OnInitialized()
+    {
+        model.Visible = BannerService.Visible;
+
+        model.Message = BannerService.Message;
+    }
+
+    private void HandleValidSubmit()
+    {
+        BannerService.UpdateBanner(model.Visible, model.Message);
+
+        NavigationManager.NavigateTo("/");
+    }
+}

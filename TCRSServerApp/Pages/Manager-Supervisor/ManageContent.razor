@@ -18,7 +18,6 @@
     <table class="table">
         <thead>
             <tr>
-                <th>#</th>
                 <th>ID</th>
                 <th>Title</th>
                 <th>Category</th>
@@ -44,14 +43,12 @@
                 </tr>
             } else
             {
-                int snum = 1;
                 @foreach(var post in _posts)
                 {
-                    var editContentLink = $"/mngr-sprvsr/manage-content/edit/{post.Id}";
+                    var editContentLink = $"/mngr-sprvsr/manage-content/edit/{post.PostId}";
 
                     <tr>
-                        <td>@(snum++)</td>
-                        <td>@post.Id</td>
+                        <td>@post.PostId</td>
                         <td>@post.Title</td>
                         <td>@post.CategoryName</td>
                         <td>
@@ -72,7 +69,7 @@
                             <NavLink href="@editContentLink" class="btn btn-primary btn-sm">Edit</NavLink>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-danger btn-sm text-decoration-underline">Delete</button>
+                            <button type="button" class="btn btn-danger btn-sm text-decoration-underline" @onclick="()=> DeletePostAsync(post)">Delete</button>
                         </td>
                     </tr>
                 }
@@ -87,14 +84,27 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadCategoriesAsync();
+    }
+
+    private async Task LoadCategoriesAsync()
+    {
         _isLoading = true;
 
         try
         {
             _posts = await ContentPostService.GetPostsAsync();
-        }finally
+        }
+        finally
         {
             _isLoading = false;
         }
+    }
+
+    private async Task DeletePostAsync(ContentPost content)
+    {
+        await ContentPostService.DeletePostsAsync(content.PostId);
+
+        await LoadCategoriesAsync();
     }
 }

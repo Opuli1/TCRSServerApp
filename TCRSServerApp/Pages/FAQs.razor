@@ -1,4 +1,7 @@
 ﻿@page "/faqs"
+@page "/faqs/{PostSlug}"
+
+@inject ContentPostService ContentPostService
 
 <PageTitle>FAQs | TCRS App</PageTitle>
 
@@ -23,57 +26,47 @@
 
 <div class="spacer-red"></div>
 
-<div class="second-section m-0 p-20">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8">
-                <h3 class="text-dark mb-5">Topic 1</h3>
-                <p class="text-dark mb-5">
-                    <ul class="list-unstyled">
-                        <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li>
-                        <br />
-                        <li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</li>
-                        <br />
-                        <li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</li>
-                        <br />
-                        <li>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</li>
-                    </ul>
-                </p>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+            <h1 class="fs-3 mt-16">Posts</h1>
+            <hr />
 
-                <div class="spacer-blue"></div>
+            @if (posts == null || posts.Count == 0)
+            {
+                <div class="d-flex justify-content-center flex-column align-items-center" style="min-height: 250px">
+                    <h3>No Content Found</h3>
+                    <AuthorizeView>
+                        <Authorized>
+                            <NavLink href="/mngr-sprvsr/manage-content/new" class="btn btn-primary">+ Create New Post</NavLink>
+                        </Authorized>
 
-                <h3 class="text-dark mb-5">Topic 2</h3>
-                <p class="text-dark mb-5">
-                    <ul class="list-unstyled">
-                        <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li>
-                        <br />
-                        <li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</li>
-                        <br />
-                        <li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</li>
-                        <br />
-                        <li>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</li>
-                    </ul>
-                </p>
-
-                <div class="spacer-blue"></div>
-
-                <h3 class="text-dark mb-5">Topic 3</h3>
-                <div class="text-dark mb-5">
-                    <ul class="list-unstyled">
-                        <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li>
-                        <br />
-                        <li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</li>
-                        <br />
-                        <li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</li>
-                        <br />
-                        <li>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</li>
-                    </ul>
+                        <NotAuthorized>
+                            <p>Please check back later...</p>
+                        </NotAuthorized>
+                    </AuthorizeView>
                 </div>
-            </div>
+            }
+            else
+            {
+                <ContentPostsList Posts="posts" />
+            }
         </div>
     </div>
 </div>
 
 @code {
+    [Parameter]
+    public string PostSlug { get; set; }
 
+    private List<ContentPost> posts = new List<ContentPost>();
+
+    protected override async  Task OnInitializedAsync()
+    {
+        var allPosts = await ContentPostService.GetPostsAsync();
+
+        posts = allPosts.Where(p => p.CategoryId == 2).ToList();
+
+        StateHasChanged();
+    }
 }

@@ -1,17 +1,30 @@
-﻿
-@if(_visible)
+﻿@inject BannerService BannerService
+
+@if(BannerService.ClientVisible)
 {
-    <div class="col-md-12 banner">
-        Important Sitewide Message Goes Here
-        <button @onclick="@Dismiss" class="btn btn-outline-danger">x</button>
+    <div class="alert alert-warning alert-dismissable fade show fixed-top banner" role="alert">
+        @BannerService.Message
+        <button type="button" class="close alert-warning" data-dismiss="alert" aria-label="Close" @onclick="Dismiss">
+            <span aria-hidden="true">x</span>
+        </button>
     </div>
 }
 
 @code {
-    private bool _visible = false; //make 'true' to activate banner
+    private bool clientVisible => BannerService.Visible;
 
-    private void Dismiss() 
+    protected override void OnInitialized()
     {
-        _visible = false;
+        BannerService.OnChange += StateHasChanged;
+    }
+
+    private void Dismiss()
+    {
+        BannerService.ToggleVisibility(false);
+    }
+
+    public void Dispose()
+    {
+        BannerService.OnChange -= StateHasChanged;
     }
 }

@@ -6,7 +6,7 @@ namespace TCRSServerApp.Data.Entities
     public class Category
     {
         [Key]
-        public int Id { get; set; }
+        public int CategoryId { get; set; }
 
         [Required, MaxLength(100), Unicode(false)]
         public string Name { get; set; }

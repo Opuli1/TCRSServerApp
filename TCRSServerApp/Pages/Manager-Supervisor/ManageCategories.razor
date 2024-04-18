@@ -19,10 +19,9 @@
     <table class="table">
         <thead>
             <tr>
-                <th>#</th>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Slug</th>
+                <th>URL</th>
                 <th></th>
                 <th></th>
             </tr>
@@ -45,15 +44,13 @@
                 </tr>
             } else
             {
-                int snum = 1;
                 foreach(var category in _categories)
                 {
                     <tr>
-                        <td>@snum</td>
-                        <td>@category.Id</td>
+                        <td>@category.CategoryId</td>
                         <td>@category.Name</td>
                         <td>@category.Slug</td>
-                        @if(category.Id != 0)
+                        @if(category.CategoryId > 3)
                         {
                             <td>
                                 <button type="button" class="btn btn-primary btn-sm text-decoration-underline" @onclick="()=> EditCategoryAsync(category)">Edit</button>
@@ -61,11 +58,13 @@
                             <td>
                                 <button type="button" class="btn btn-danger btn-sm text-decoration-underline" @onclick="()=> DeleteCategoryAsync(category)">Delete</button>
                             </td>
+                        } else
+                        {
+                            <td></td>
+                            <td></td>
                         }
-                        
-                    </tr>
 
-                    snum++;
+                    </tr>
                 }
             }
         </tbody>
@@ -126,7 +125,7 @@
 
     private async Task DeleteCategoryAsync(Category category)
     {
-        await CategoryService.DeleteCategoryAsync(category.Id);
+        await CategoryService.DeleteCategoryAsync(category.CategoryId);
 
         await LoadCategoriesAsync();
     }

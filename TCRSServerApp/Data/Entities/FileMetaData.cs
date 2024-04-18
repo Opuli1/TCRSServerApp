@@ -1,8 +1,11 @@
-﻿namespace TCRSServerApp.Data.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TCRSServerApp.Data.Entities
 {
     public class FileMetaData
     {
-        public int Id { get; set; }
+        [Key]
+        public int FileId { get; set; }
 
         public string FileName { get; set; }
 

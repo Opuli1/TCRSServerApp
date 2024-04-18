@@ -8,6 +8,8 @@ namespace TCRSServerApp.Data
         {
         }
 
+        public DbSet<BannerSettings> BannerSettings { get; set; }
+
         public DbSet<Entities.Category> Categories { get; set; }
 
         public DbSet<User> Users { get; set; }
@@ -26,16 +28,46 @@ namespace TCRSServerApp.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<BannerSettings>()
+                .HasData(
+                    new BannerSettings
+                    {
+                        BannerId = 1,
+                        Visible = false,
+                        Message = "*Important Message Goes Here*"
+                    }
+                );
+
             modelBuilder.Entity<User>()
                 .HasData(
                     new User
                     {
-                        Id = 1,
+                        UserId = 1,
                         Email = "john.doe@gmail.com",
                         FirstName = "John",
                         LastName = "Doe",
                         Salt = "iergberihb",
-                        Hash = "iewfbukrficruyewreob"
+                        Hash = "iewfbukrficruyewreob",
+                        CreatedOn = DateTime.Now
+                    }
+                );
+
+            modelBuilder.Entity<Category>()
+                .HasData(
+                    new Category {
+                        CategoryId = 1,
+                        Name = "Uncategorized",
+                        Slug = "uncategorized"
+                    },
+                    new Category {
+                        CategoryId = 2,
+                        Name = "FAQ",
+                        Slug = "faq"
+                    },
+                    new Category {
+                        CategoryId = 3,
+                        Name = "Documentation",
+                        Slug = "documentation"
                     }
                 );
 

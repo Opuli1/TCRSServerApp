@@ -1,3 +1,12 @@
-﻿second-section {
+﻿.second-section {
     border-color: #06153e !important;
+    text-align: center !important;
+}
+
+.heading-secondary {
+    color: #081d55 !important;
+}
+
+.text-primary {
+    color: #007bff !important;
 }

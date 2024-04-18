@@ -14,6 +14,7 @@ builder.Services.AddScoped<AppAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(serviceProvider =>
     serviceProvider.GetRequiredService<AppAuthenticationStateProvider>());
 builder.Services.AddScoped<SearchService>();
+builder.Services.AddScoped<BannerService>();
 
 var appConnectionString = builder.Configuration.GetConnectionString("TCRS");
 

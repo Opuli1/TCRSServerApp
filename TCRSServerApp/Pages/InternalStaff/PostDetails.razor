@@ -15,7 +15,7 @@
 
                     <NavLink href="/staff/view-content" class="btn btn-primary">See the Latest Posts</NavLink>            
                 </div>
-            } else if(post?.Id > 0)
+            } else if(post?.PostId > 0)
             {
                 var categoryTitle = $"{post.CategoryName} Posts";
 
@@ -23,11 +23,17 @@
 
                 var color = Utilities.GetRandomColor();
 
-                <h1 class="fs-1 bg-@color text-light p-5 mt-16 rounded">@post.Title</h1>
+                <h1 class="fs-1 bg-@color bg-opacity-10 p-5 mt-16 rounded">@post.Title</h1>
                 
                 <small>
                     <label>
-                        <NavLink href="@categoryPostsLink" class="text-decoration-none" title="@categoryTitle">@post.CategoryName</NavLink>
+                        @if(post.CategoryId == 2)
+                        {
+                            <NavLink href="/faqs" class="text-decoration-none" title="FAQs">@post.CategoryName</NavLink>
+                        } else
+                        {
+                            <NavLink href="@categoryPostsLink" class="text-decoration-none" title="@categoryTitle">@post.CategoryName</NavLink>
+                        }
                     </label>
 
                     <label>
@@ -43,10 +49,6 @@
             {
                 <p>Getting Post...</p>
             }
-        </div>
-
-        <div class="col-sm-3">
-            <CategoriesBox />
         </div>
     </div>
 </div>

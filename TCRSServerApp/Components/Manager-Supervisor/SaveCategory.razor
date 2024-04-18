@@ -5,19 +5,19 @@
 
     <div class="card border-0">
         <div class="card-header rounded-0 bg-blue text-light d-flex justify-content-between align-items-center" style="min-width: 300px">
-            <h4>@(_categoryModel.Id > 0 ? "Edit" : "Add New") Category</h4>
+            <h4>@(_categoryModel.CategoryId > 3 ? "Edit" : "Add New") Category</h4>
 
             <button type="button" class="btn btn-sm btn-danger" @onclick="CloseFormAsync">x</button>
         </div>
         <div class="card-body">
             <div class="mb-3">
                 <label class="form-label">Name: </label>
-                <InputText @bind-Value="_categoryModel.Name" class="form-control" placeholder="Category Name" @onblur="OnNameBlur"/>
+                <InputText @bind-Value="_categoryModel.Name" class="form-control" placeholder="Category Name" @onblur="OnNameBlur" />
                 <ValidationMessage For="()=> _categoryModel.Name" />
             </div>
             <div class="mb-3">
-                <label class="form-label">Slug: </label>
-                <InputText @bind-Value="_categoryModel.Slug" class="form-control" placeholder="Category Slug" disabled="@(_categoryModel.Id > 0)" />
+                <label class="form-label">URL: </label>
+                <InputText @bind-Value="_categoryModel.Slug" class="form-control" placeholder="Category URL" disabled="@(_categoryModel.CategoryId)" />
                 <ValidationMessage For="()=> _categoryModel.Slug" />
             </div>
         </div>
@@ -48,7 +48,7 @@
 
     private void OnNameBlur()
     {
-        if (_categoryModel.Id == 0 && !string.IsNullOrWhiteSpace(_categoryModel.Name))
+        if (_categoryModel.CategoryId == 0 && !string.IsNullOrWhiteSpace(_categoryModel.Name))
         {
             _categoryModel.Slug = _categoryModel.Name.Slugify();
         }

@@ -19,7 +19,7 @@ namespace TCRSServerApp.Services
 
             if (dbUser is not null)
             {
-                return new SignedInUser(dbUser.Id, $"{dbUser.FirstName} {dbUser.LastName}".Trim());
+                return new SignedInUser(dbUser.UserId, $"{dbUser.FirstName} {dbUser.LastName}".Trim());
             } else
             {
                 return null;

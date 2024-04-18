@@ -11,24 +11,31 @@
 
         <li class="mb-3">
             <div class="row">
-                <div class="col-sm-2 bg-@color rounded d-flex justify-content-center align-items-center">
-                    <label class="fs-1 text-uppercase text-light">@Utilities.GetInitials(post.Title)</label>
-                </div>
-
                 <div class="col-sm-10 bg-@color bg-opacity-10">
                     <h2>
                         <NavLink href="@detailPostsLink" class="text-decoration-none text-dark fs-5" title="@post.Title">@post.Title</NavLink>
                     </h2>
 
-                    <small>
+                    @if(post.CategoryId == 2)
+                    {
+                        <small class="d-flex float-end">                        
                         <label>
-                            <NavLink href="@categoryPostsLink" class="text-decoration-none" title="@categoryTitle">@post.CategoryName</NavLink>
+                            @post.PublishedOn!.Value.ToShortDateString()
                         </label>
+                        </small>
+                    } else
+                    {
+                        <small class="d-flex justify-content-between">
+                            <label>
+                                <NavLink href="@categoryPostsLink" class="text-decoration-none" title="@categoryTitle">@post.CategoryName</NavLink>
+                            </label>
 
-                        <label>
-                            @post.PublishedOn!.Value.ToShortDateString();
-                        </label>
-                    </small>
+                            <label>
+                                @post.PublishedOn!.Value.ToShortDateString()
+                            </label>
+                        </small>
+                    }
+
                 </div>
             </div>
         </li>

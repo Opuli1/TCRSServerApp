@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Components.Forms
 
 @page "/mngr-sprvsr/manage-content/new"
-@page "/mngr-sprvsr/manage-content/edit/{urlPostId:int?}"
+@page "/mngr-sprvsr/manage-content/edit/{UrlPostId:int?}"
 
 @attribute [Authorize]
 
@@ -41,21 +41,20 @@
 
                     <div class="mb-3">
                         <label class="form-label">Title: </label>
-                        <InputText @bind-Value="model.Title" class="form-control" placeholder="Enter Title" />
+                        <InputText @bind-Value="model.Title" class="form-control" placeholder="Enter Title" @onblur="OnNameBlur" />
                         <ValidationMessage For="()=> model.Title" />
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Slug: </label>
-                        <InputText @bind-Value="model.Slug" class="form-control" placeholder="Enter Slug" />
+                        <label class="form-label">URL: </label>
+                        <InputText @bind-Value="model.Slug" class="form-control" placeholder="Post URL" disabled="@(model.PostId)" />
                         <ValidationMessage For="()=> model.Slug" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Category: </label>
                         <InputSelect @bind-Value="model.CategoryId" class="form-control">
-
                             @foreach (var category in categories)
                             {
-                                <option value="@category.Id">@category.Name</option>
+                                <option value="@category.CategoryId">@category.Name</option>
                             }
                         </InputSelect>
                         <ValidationMessage For="()=> model.CategoryId" />
@@ -115,8 +114,8 @@
                         <p class="text-danger">@errorMessage</p>
                     }
                     <div class="mb-3 d-flex justify-content-between">
-                        <button type="submit" class="btn btn-success">Save</button>
-                        <NavLink href="/mngr-sprvsr/manage-content" class="btn btn-danger">Cancel</NavLink>
+                        <button type="submit" class="btn btn-success mb-3">Save</button>
+                        <NavLink href="/mngr-sprvsr/manage-content" class="btn btn-danger mb-3">Cancel</NavLink>
                     </div>
                     <hr />
                 </EditForm>
@@ -147,6 +146,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+
         var categoriesList = await CategoryService.GetCategoriesAsync();
 
         if (categoriesList?.Any() == true)
@@ -166,13 +166,29 @@
             {
                 model = dbModel;
             }
+        } else
+        {
+            model = new ContentSaveModel();
+
+            model.CategoryId = 1;
+        }
+    }
+
+    private void OnNameBlur()
+    {
+        if (model.PostId == 0 && !string.IsNullOrWhiteSpace(model.Title))
+        {
+            model.Slug = model.Title.Slugify();
         }
     }
 
     private async Task SaveContentAsync()
     {
-        model.Content = await quillHtml.GetHTML();
-
+        if(quillHtml != null)
+        {
+            model.Content = await quillHtml.GetHTML();
+        }
+        
         if(string.IsNullOrWhiteSpace(model.Content))
         {
             errorMessage = "Content is required";

@@ -6,44 +6,63 @@
         <NavLink href="/" class="text-light nav-item"><img src="/tcrs_logo.png" style="max-width: 75%" /></NavLink>
 
         <ul class="list-unstyled nav flex-row align-items-end">
+
             <li class="bg-light separation mx-2"></li>
-            <li>
-                <NavLink href="/" class="text-light nav-item btn">Home</NavLink>
+            
+            <li class="dropdown menu-overflow">
+                <button class="btn text-light dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Public</button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <NavLink href="/faqs" class="text-light dropdown-item btn">FAQs</NavLink>
+                    </li>
+                    <li>
+                        <NavLink href="/about-us" class="text-light dropdown-item btn">About Us</NavLink>
+                    </li>
+                    <li>
+                        <NavLink href="/contact-us" class="text-light dropdown-item btn">Contact Us</NavLink>
+                    </li>
+                </ul>
             </li>
-            <li>
-                <NavLink href="/faqs" class="text-light nav-item btn">FAQs</NavLink>
-            </li>
-            <li>
-                <NavLink href="/about-us" class="text-light nav-item btn">About Us</NavLink>
-            </li>
-            <li>
-                <NavLink href="/contact-us" class="text-light nav-item btn">Contact Us</NavLink>
-            </li>
+            
             <li class="bg-light separation mx-2"></li>
-        </ul>
+        
             <AuthorizeView>
                 <Authorized>
-                    <ul class="list-unstyled nav flex-row align-items-end">
-                        <li>
-                            <NavLink href="/staff/view-content" class="text-light nav-item btn">View Content</NavLink>
-                        </li>
-                        <li class="bg-light separation mx-2"></li>
-                    </ul>
+                    <li>
+                        <NavLink href="/staff/view-content" class="text-light nav-item btn">View Content</NavLink>
+                    </li>
 
-                <div class="dropdown nav flex-row align-items-end menu-overflow">
-                        <NavLink href="#" class="btn nav-item text-light dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Manager/Supervisor</NavLink>
+                    <li class="bg-light separation mx-2"></li>
+
+                    <li class="dropdown menu-overflow">
+                        <button class="btn text-light dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Manager/Supervisor</button>
                         <ul class="dropdown-menu">
                             <li>
-                            <NavLink href="/mngr-sprvsr/manage-categories" class="text-light dropdown-item btn">Manage Categories</NavLink>
+                                <NavLink href="/mngr-sprvsr/manage-categories" class="text-light dropdown-item btn">Manage Categories</NavLink>
                             </li>
                             <li>
                                 <NavLink href="/mngr-sprvsr/manage-content" class="text-light dropdown-item btn">Manage Content</NavLink>
                             </li>
-                            <li class="bg-light separation mx-2"></li>
                         </ul>
-                    </div>
+                    </li>
+
+                    <li class="bg-light separation mx-2"></li>
+
+                    <li class="dropdown menu-overflow">
+                        <button class="btn text-light dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">Admin</button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <NavLink href="/admin/manage-users" class="text-light dropdown-item btn">Manage Users</NavLink>
+                            </li>
+                            <li>
+                                <NavLink href="/admin/manage-banner" class="text-light dropdown-item btn">Manage Banner</NavLink>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="bg-light separation mx-2"></li>
                 </Authorized>
             </AuthorizeView>
+        </ul>
         <div class="text-end nav flex-row align-items-end">
             <AuthorizeView>
                 <Authorizing>Checking Authentication...</Authorizing>

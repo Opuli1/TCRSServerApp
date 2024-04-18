@@ -43,7 +43,9 @@
     {
         if (!categories.Any())
         {
-            categories = await CategoryService.GetCategoriesAsync();
+            var allCategories = await CategoryService.GetCategoriesAsync();
+
+            categories = allCategories.Where(c => c.CategoryId == 1 || c.CategoryId >= 4).ToList();
         }
     }
 

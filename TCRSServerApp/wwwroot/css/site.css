@@ -127,6 +127,13 @@ h6 {
     font-weight: 300 !important;
 }
 
+.footer-spacer-red {
+    padding: 2px;
+    background-color: #cc0000;
+    border: 1px solid #b30000;
+    margin-bottom: 40px;
+}
+
 .spacer-red {
     padding: 2px;
     background-color: #cc0000;
@@ -205,11 +212,8 @@ p {
 }
 
 .banner {
-    padding: 1em;
     text-align: center;
-    background-color: #ffa391;
     font-size: 1.2em;
-    position: absolute;
 }
 
 .dropdown:hover .dropdown-menu {
