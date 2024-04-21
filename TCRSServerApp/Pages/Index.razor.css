@@ -28,3 +28,21 @@ a {
 .tcrs-logo {
     width: 100%;
 }
+
+.link {
+    position: relative;
+    color: white;
+    transition: background 0.3s ease-in-out, color .3s ease-in-out;
+    overflow: hidden;
+}
+
+.link {
+    background-image: linear-gradient(to bottom, #fff 50%, transparent 50%);
+    background-size: 100% 200%;
+    background-position: 0 100%;
+}
+
+.link:hover {
+    background-position: 0 0;
+    color: #777;
+}
