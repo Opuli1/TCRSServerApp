@@ -93,23 +93,24 @@ namespace TCRSServerApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FileMetaData",
+                name: "Files",
                 columns: table => new
                 {
                     FileId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ContentPostPostId = table.Column<int>(type: "int", nullable: true)
+                    PostId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FileMetaData", x => x.FileId);
+                    table.PrimaryKey("PK_Files", x => x.FileId);
                     table.ForeignKey(
-                        name: "FK_FileMetaData_ContentPosts_ContentPostPostId",
-                        column: x => x.ContentPostPostId,
+                        name: "FK_Files_ContentPosts_PostId",
+                        column: x => x.PostId,
                         principalTable: "ContentPosts",
-                        principalColumn: "PostId");
+                        principalColumn: "PostId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -130,7 +131,7 @@ namespace TCRSServerApp.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "UserId", "CreatedOn", "EditedOn", "Email", "FirstName", "Hash", "LastName", "Salt" },
-                values: new object[] { 1, new DateTime(2024, 4, 17, 18, 12, 7, 93, DateTimeKind.Local).AddTicks(6788), null, "john.doe@gmail.com", "John", "iewfbukrficruyewreob", "Doe", "iergberihb" });
+                values: new object[] { 1, new DateTime(2024, 4, 20, 19, 16, 19, 753, DateTimeKind.Local).AddTicks(5077), null, "john.doe@gmail.com", "John", "iewfbukrficruyewreob", "Doe", "iergberihb" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ContentPosts_CategoryId",
@@ -143,9 +144,9 @@ namespace TCRSServerApp.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FileMetaData_ContentPostPostId",
-                table: "FileMetaData",
-                column: "ContentPostPostId");
+                name: "IX_Files_PostId",
+                table: "Files",
+                column: "PostId");
         }
 
         /// <inheritdoc />
@@ -155,7 +156,7 @@ namespace TCRSServerApp.Migrations
                 name: "BannerSettings");
 
             migrationBuilder.DropTable(
-                name: "FileMetaData");
+                name: "Files");
 
             migrationBuilder.DropTable(
                 name: "ContentPosts");

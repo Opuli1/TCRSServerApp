@@ -165,6 +165,7 @@ namespace TCRSServerApp.Services
         public async Task<ContentPost?> GetPostBySlugAsync(string slug) =>
             await _context.ContentPosts
                         .Include(cp => cp.Category)
+                        .Include(f => f.Files)
                         .AsNoTracking()
                         .FirstOrDefaultAsync(cp => cp.IsPublished && cp.Slug == slug);
     }

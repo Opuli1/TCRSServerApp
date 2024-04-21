@@ -27,10 +27,14 @@
                     <InputText @bind-Value="_model.Username" class="form-control" placeholder="Enter Username" />
                     <ValidationMessage For="()=> _model.Username" />
                 </div>
-                <div class="mb-3">
+                <div>
                     <label class="form-label">Password</label>
-                    <InputText type="password" @bind-Value="_model.Password" class="form-control" placeholder="Enter Password" />
+                    <InputText type="@passwordInputType" @bind-Value="_model.Password" class="form-control" placeholder="Enter Password" />
                     <ValidationMessage For="()=> _model.Password" />
+                </div>
+                <div class="mb-3 form-check">
+                    <label class="form-check-label" for="showPassword">Show/Hide Password</label>
+                    <InputCheckbox class="form-check-input" id="showPassword" @bind-Value="showPassword" />
                 </div>
                 
                 @if(!string.IsNullOrWhiteSpace(_error))
@@ -48,10 +52,11 @@
 
 @code {
     private SignInModel _model = new();
-
     private bool _isProcessing = false;
-
     private string _error = null;
+    private bool showPassword = false;
+
+    private string passwordInputType => showPassword ? "text" : "password";
 
     private async Task SignInAsync()
     {

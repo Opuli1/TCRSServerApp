@@ -30,14 +30,17 @@
                         @if(post.CategoryId == 2)
                         {
                             <NavLink href="/faqs" class="text-decoration-none" title="FAQs">@post.CategoryName</NavLink>
+                        } else if(post.CategoryId == 3)
+                        {
+                            <NavLink href="/documentation" class="text-decoration-none" title="Documentation">@post.CategoryName</NavLink>
                         } else
                         {
                             <NavLink href="@categoryPostsLink" class="text-decoration-none" title="@categoryTitle">@post.CategoryName</NavLink>
                         }
                     </label>
 
-                    <label>
-                        @post.PublishedOn!.Value.ToShortDateString();
+                    <label class="d-flex justify-content-between">
+                        @post.PublishedOn!.Value.ToShortDateString()
                     </label>
                 </small>
                 <hr />
@@ -45,6 +48,17 @@
                 <div class="main-content">
                     @((MarkupString)post.Content)
                 </div>
+
+                @if(post.Files != null && post.Files.Any())
+                {
+                    <h4>Attached Files: </h4>
+                    <ul>
+                        @foreach(var file in post.Files)
+                        {
+                            <li><a href="@file.FilePath" download="@file.FileName">@file.FileName</a></li>
+                        }
+                    </ul>
+                }
             } else
             {
                 <p>Getting Post...</p>

@@ -16,6 +16,8 @@ namespace TCRSServerApp.Data
 
         public DbSet<ContentPost> ContentPosts { get; set; }
 
+        public DbSet<FileMetaData> Files { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
@@ -27,6 +29,11 @@ namespace TCRSServerApp.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<FileMetaData>()
+                .HasOne(p => p.ContentPost)
+                .WithMany(f => f.Files)
+                .HasForeignKey(p => p.PostId);
 
             modelBuilder.Entity<BannerSettings>()
                 .HasData(

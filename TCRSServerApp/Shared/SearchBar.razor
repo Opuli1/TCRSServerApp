@@ -11,7 +11,7 @@
         {
             @foreach(var result in searchResults)
             {
-                <a href="@result.Url" class="search-result-item">
+                <a href="@result.Url" class="search-result-item" @onclick="(() => SelectResult(result))">
                     @if(result.Type == "Post")
                     {
                         @result.Title
@@ -69,5 +69,12 @@
     public void Dispose()
     {
         debounceTimer?.Dispose();
+    }
+
+    private void SelectResult(SearchResult result) {
+        searchText = string.Empty;
+        searchResults.Clear();
+        searchPerformed = false;
+        StateHasChanged();
     }
 }

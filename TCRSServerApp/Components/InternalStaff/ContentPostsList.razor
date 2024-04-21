@@ -16,7 +16,7 @@
                         <NavLink href="@detailPostsLink" class="text-decoration-none text-dark fs-5" title="@post.Title">@post.Title</NavLink>
                     </h2>
 
-                    @if(post.CategoryId == 2)
+                    @if(post.CategoryId == 2 || post.CategoryId == 3)
                     {
                         <small class="d-flex float-end">                        
                         <label>

@@ -45,9 +45,13 @@
                     <InputText id="lastName" class="form-control" @bind-Value="model.LastName" />
                 </div>
 
-                <div class="mb-3">
+                <div>
                     <label class="form-label" for="password">@PasswordLabel</label>
-                    <InputText id="password" class="form-control" @bind-Value="model.Password" />
+                    <InputText type="@passwordInputType" id="password" class="form-control" @bind-Value="model.Password" />
+                </div>
+                <div class="mb-3 form-check">
+                    <label class="form-check-label" for="showPassword">Show/Hide Password</label>
+                    <InputCheckbox class="form-check-input" id="showPassword" @bind-Value="showPassword" />
                 </div>
 
                 <div class="mb-3 d-flex justify-content-between">
@@ -64,12 +68,12 @@
     public int? UserId { get; set; }
 
     private UserModel model = new UserModel();
-
     private bool duplicate = false;
+    private bool showPassword = false;
 
     private string ButtonText => UserId.HasValue ? "Update User" : "Create User";
-
     private string PasswordLabel => UserId.HasValue ? "Reset Password: " : "Password: ";
+    private string passwordInputType => showPassword ? "text" : "password";
 
     protected override async Task OnInitializedAsync()
     {
@@ -118,7 +122,8 @@
                     LastName = model.LastName,
                     Email = model.Email,
                     Salt = Convert.ToBase64String(salt),
-                    Hash = Convert.ToBase64String(hash)
+                    Hash = Convert.ToBase64String(hash),
+                    CreatedOn = DateTime.Now
                 };
 
                 _context.Users.Add(newUser);

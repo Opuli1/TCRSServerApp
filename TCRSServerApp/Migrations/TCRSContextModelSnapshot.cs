@@ -152,9 +152,6 @@ namespace TCRSServerApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FileId"));
 
-                    b.Property<int?>("ContentPostPostId")
-                        .HasColumnType("int");
-
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -163,11 +160,14 @@ namespace TCRSServerApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
                     b.HasKey("FileId");
 
-                    b.HasIndex("ContentPostPostId");
+                    b.HasIndex("PostId");
 
-                    b.ToTable("FileMetaData");
+                    b.ToTable("Files");
                 });
 
             modelBuilder.Entity("TCRSServerApp.Data.Entities.User", b =>
@@ -219,7 +219,7 @@ namespace TCRSServerApp.Migrations
                         new
                         {
                             UserId = 1,
-                            CreatedOn = new DateTime(2024, 4, 17, 18, 12, 7, 93, DateTimeKind.Local).AddTicks(6788),
+                            CreatedOn = new DateTime(2024, 4, 20, 19, 16, 19, 753, DateTimeKind.Local).AddTicks(5077),
                             Email = "john.doe@gmail.com",
                             FirstName = "John",
                             Hash = "iewfbukrficruyewreob",
@@ -249,9 +249,13 @@ namespace TCRSServerApp.Migrations
 
             modelBuilder.Entity("TCRSServerApp.Data.Entities.FileMetaData", b =>
                 {
-                    b.HasOne("TCRSServerApp.Data.Entities.ContentPost", null)
+                    b.HasOne("TCRSServerApp.Data.Entities.ContentPost", "ContentPost")
                         .WithMany("Files")
-                        .HasForeignKey("ContentPostPostId");
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ContentPost");
                 });
 
             modelBuilder.Entity("TCRSServerApp.Data.Entities.Category", b =>

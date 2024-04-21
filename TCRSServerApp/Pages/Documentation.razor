@@ -1,0 +1,72 @@
+﻿@page "/documentation"
+@page "/documentation/{PostSlug}"
+
+@inject ContentPostService ContentPostService
+
+<PageTitle>Documentation | TCRS App</PageTitle>
+
+<div class="bg-image2 m-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 intro-section">
+                <h6>Tennessee Consolidated Retirement System</h6>
+
+                <div class="divider divider-small divider-small-sm divider-small-center divider-light">
+                    <div class="buffer"><hr class="small-hr" /></div>
+                </div>
+                <h1>Documentation</h1>
+
+                <p class="lead mb-0">
+                    We want to help you achieve a healthy, happy, and secure future, no matter where your retirement dreams take you.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="spacer-red"></div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+            <h1 class="fs-3 mt-16">Posts</h1>
+            <hr />
+
+            @if (posts == null || posts.Count == 0)
+            {
+                <div class="d-flex justify-content-center flex-column align-items-center" style="min-height: 250px">
+                    <h3>No Content Found</h3>
+                    <AuthorizeView>
+                        <Authorized>
+                            <NavLink href="/mngr-sprvsr/manage-content/new" class="btn btn-primary">+ Create New Post</NavLink>
+                        </Authorized>
+
+                        <NotAuthorized>
+                            <p>Please check back later...</p>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </div>
+            }
+            else
+            {
+                <ContentPostsList Posts="posts" />
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string PostSlug { get; set; }
+
+    private List<ContentPost> posts = new List<ContentPost>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var allPosts = await ContentPostService.GetPostsAsync();
+
+        posts = allPosts.Where(p => p.CategoryId == 3).ToList();
+
+        StateHasChanged();
+    }
+}
